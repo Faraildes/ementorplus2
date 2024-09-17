@@ -1,6 +1,9 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import gui.util.Constraints;
@@ -11,9 +14,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.entities.Teacher;
 
 public class TeacherFormController implements Initializable{
 
+	private Teacher entity;
+	
 	@FXML
 	private TextField txtId;
 	
@@ -65,6 +71,10 @@ public class TeacherFormController implements Initializable{
 	@FXML
 	private Button btCancel;
 	
+	public void setTeacher(Teacher entity) {
+		this.entity = entity;
+	}
+	
 	@FXML
 	public void onBtSaveAction() {
 		System.out.println("onBtSaveAction");
@@ -90,5 +100,20 @@ public class TeacherFormController implements Initializable{
 		Constraints.setTextFieldMaxLength(txtChief, 3);
 		Constraints.setTextFieldMaxLength(txtCoordinator, 3);		
 	}
-
+	
+	public void updateFormData() {
+		if(entity == null)
+			throw new IllegalStateException("Entity was null");	
+		
+		txtId.setText(String.valueOf(entity.getId()));
+		txtName.setText(entity.getName());
+		txtCpf.setText(entity.getCpf());
+		txtPhone.setText(entity.getPhone());
+		if(entity.getAdmissionDate() != null)
+			dpAdmissionDate.setValue(LocalDate.ofInstant(entity.getAdmissionDate().toInstant(), ZoneId.systemDefault()));
+		Locale.setDefault(Locale.US);
+		txtSalary.setText(String.format("%.2f", entity.getSalary()));
+		txtChief.setText(entity.getChief());
+		txtCoordinator.setText(entity.getCoordinator());
+	}
 }
