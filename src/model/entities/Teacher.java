@@ -9,24 +9,24 @@ public class Teacher implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
-	private String name;	
+	private String name;
+	private Date admissionDate;
 	private String cpf;
 	private String phone;
-	private Date admissionDate;
 	private Double salary;
 	private String chief;
 	private String coordinator;
-	
-	public Teacher() {
+			
+	public Teacher() {		
 	}
 
-	public Teacher(Integer id, String name, String cpf, String phone, Date admissionDate, Double salary, String chief,
-			String coordinator) {		
+	public Teacher(Integer id, String name, Date admissionDate, String cpf, String phone, Double salary, String chief,
+			String coordinator) {	
 		this.id = id;
 		this.name = name;
+		this.admissionDate = admissionDate;
 		this.cpf = cpf;
 		this.phone = phone;
-		this.admissionDate = admissionDate;
 		this.salary = salary;
 		this.chief = chief;
 		this.coordinator = coordinator;
@@ -48,6 +48,14 @@ public class Teacher implements Serializable{
 		this.name = name;
 	}
 
+	public Date getAdmissionDate() {
+		return admissionDate;
+	}
+
+	public void setAdmissionDate(Date admissionDate) {
+		this.admissionDate = admissionDate;
+	}
+
 	public String getCpf() {
 		return cpf;
 	}
@@ -62,14 +70,6 @@ public class Teacher implements Serializable{
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public Date getAdmissionDate() {
-		return admissionDate;
-	}
-
-	public void setAdmissionDate(Date admissionDate) {
-		this.admissionDate = admissionDate;
 	}
 
 	public Double getSalary() {
@@ -119,9 +119,7 @@ public class Teacher implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Teacher [id=" + id + ", name=" + name + ", cpf=" + cpf + ", phone=" + phone + ", admissionDate="
-				+ admissionDate + ", salary=" + salary + ", chief=" + chief + ", coordinator=" + coordinator + "]";
-	}
-	
-	
-}	
+		return "Teacher [id=" + id + ", name=" + name + ", admissionDate=" + admissionDate + ", cpf=" + cpf + ", phone="
+				+ phone + ", salary=" + salary + ", chief=" + chief + ", coordinator=" + coordinator + "]";
+	}	
+}
