@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -24,6 +26,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Teacher;
+import model.exception.ValidationException;
 import model.services.TeacherService;
 
 public class TeacherFormController implements Initializable{
@@ -109,6 +112,9 @@ public class TeacherFormController implements Initializable{
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 		}
+		catch (ValidationException ex) {
+			setErrorMessages(ex.getErrors());
+		}
 		catch (DbException e) {
 			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -124,15 +130,44 @@ public class TeacherFormController implements Initializable{
 	private Teacher getFormData() {
 		Teacher obj = new Teacher();
 		
+		ValidationException exception = new ValidationException("Validation eror"); 
+		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
+		if(txtName.getText() == null || txtName.getText().trim().equals("")) {
+			exception.addError("name", "Field can't be empty");
+		}
 		obj.setName(txtName.getText());
-		obj.setCpf(txtCpf.getText());
-		obj.setPhone(txtPhone.getText());
-		Instant instant = Instant.from(dpAdmissionDate.getValue().atStartOfDay(ZoneId.systemDefault()));
-		obj.setAdmissionDate(Date.from(instant));
+		
+		if (txtCpf.getText() == null || txtCpf.getText().trim().equals("")) 
+			exception.addError("cpf", "Field can't be empty");
+		obj.setName(txtCpf.getText());
+		
+		if (txtPhone.getText() == null || txtPhone.getText().trim().equals("")) 
+			exception.addError("phone", "Field can't be empty");
+		obj.setPhone(txtName.getText());
+		
+		if (dpAdmissionDate.getValue() == null) 
+			exception.addError("admissionDate", "Field can't be empty");		
+		else {
+			Instant instant = Instant.from(dpAdmissionDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+			obj.setAdmissionDate(Date.from(instant));
+		}
+		
+		if (txtSalary.getText() == null || txtSalary.getText().trim().equals("")) 
+			exception.addError("salary", "Field can't be empty");
 		obj.setSalary(Utils.tryParseToDouble(txtSalary.getText()));
+		
+		if (txtChief.getText() == null || txtChief.getText().trim().equals("")) 
+			exception.addError("chief", "Field can't be empty");
 		obj.setChief(txtChief.getText());
+		
+		if (txtCoordinator.getText() == null || txtCoordinator.getText().trim().equals("")) 
+			exception.addError("coordinator", "Field can't be empty");
 		obj.setCoordinator(txtCoordinator.getText());
+		
+		if (exception.getErrors().size() > 0)
+			throw exception;
 		
 		return obj;
 	}
@@ -173,4 +208,23 @@ public class TeacherFormController implements Initializable{
 		txtChief.setText(entity.getChief());
 		txtCoordinator.setText(entity.getCoordinator());		
 	}
+	
+	private void setErrorMessages(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		
+		if(fields.contains("name"))
+			labelErrorName.setText(errors.get("name"));
+		if(fields.contains("cpf"))
+			labelErrorCpf.setText(errors.get("cpf"));
+		if(fields.contains("phone"))
+			labelErrorPhone.setText(errors.get("phone"));
+		if(fields.contains("admissionDate"))
+			labelErrorAdmissionDate.setText(errors.get("admissionDate"));
+		if(fields.contains("salary"))
+			labelErrorSalary.setText(errors.get("salary"));
+		if(fields.contains("chief"))
+			labelErrorChief.setText(errors.get("chief"));
+		if(fields.contains("coordinator"))
+			labelErrorCoordinator.setText(errors.get("coordinator"));
+	}	
 }	
