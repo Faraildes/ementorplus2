@@ -123,8 +123,7 @@ public class TeacherFormController implements Initializable{
 	private void notifyDataChangeListeners() {
 		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
-		}
-		
+		}		
 	}
 
 	private Teacher getFormData() {
